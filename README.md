@@ -1,6 +1,6 @@
-# codec-json
+# codec-json-go
 
-**codec-json** provides a JSON-based codec for [cmd-stream-go](https://github.com/cmd-stream/cmd-stream-go).
+**codec-json-go** provides a JSON-based codec for [cmd-stream-go](https://github.com/cmd-stream/cmd-stream-go).
 
 It maps concrete Command and Result types to internal identifiers,
 allowing type-safe serialization across network boundaries.
