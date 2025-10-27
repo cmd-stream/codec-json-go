@@ -3,58 +3,30 @@ package codecjson
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"reflect"
 	"testing"
 
+	"github.com/cmd-stream/codec-json-go/testdata"
 	tmock "github.com/cmd-stream/transport-go/testdata/mock"
 	com "github.com/mus-format/common-go"
 	assertfatal "github.com/ymz-ncnk/assert/fatal"
 )
 
-type MyInterface interface {
-	Print()
-}
-
-type MyStruct1 struct {
-	X int
-}
-
-func (s MyStruct1) Print() {
-	fmt.Println("MyStruct1")
-}
-
-type MyStruct2 struct {
-	Y string
-}
-
-func (s MyStruct2) Print() {
-	fmt.Println("MyStruct2")
-}
-
-type MyStruct3 struct {
-	Z float64
-}
-
-func (s MyStruct3) Print() {
-	fmt.Println("MyStruct3")
-}
-
 func TestCodecJSON(t *testing.T) {
 	t.Run("Encoding should work", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 
 		wantDTM := 0
-		v := MyStruct1{X: 10}
+		v := testdata.MyStruct1{X: 10}
 		wantBs, err := json.Marshal(v)
 		assertfatal.EqualError(err, nil, t)
 		wantLen := len(wantBs)
@@ -77,14 +49,14 @@ func TestCodecJSON(t *testing.T) {
 	})
 
 	t.Run("Failed to marshal DTM", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 
@@ -94,25 +66,25 @@ func TestCodecJSON(t *testing.T) {
 		w := tmock.NewWriter().RegisterWriteByte(func(b byte) error {
 			return writeErr
 		})
-		n, err := codec.Encode(MyStruct1{}, w)
+		n, err := codec.Encode(testdata.MyStruct1{}, w)
 		assertfatal.EqualError(err, wantErr, t)
 		assertfatal.Equal(n, 0, t)
 	})
 
 	t.Run("Decoding should work", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 
 		wantDTM := 1
-		wantV := MyStruct2{Y: "hello"}
+		wantV := testdata.MyStruct2{Y: "hello"}
 		wantBs, err := json.Marshal(wantV)
 		assertfatal.EqualError(err, nil, t)
 		wantLen := len(wantBs)
@@ -134,18 +106,18 @@ func TestCodecJSON(t *testing.T) {
 	})
 
 	t.Run("Unrecognized type", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 
-		v := MyStruct3{Z: 3.14}
+		v := testdata.MyStruct3{Z: 3.14}
 		wantType := reflect.TypeOf(v)
 		wantErr := NewUnrecognizedType(wantType)
 
@@ -157,14 +129,14 @@ func TestCodecJSON(t *testing.T) {
 	})
 
 	t.Run("Failed to marshal byte slice", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 
@@ -177,20 +149,20 @@ func TestCodecJSON(t *testing.T) {
 			return writeErr
 		})
 
-		n, err := codec.Encode(MyStruct1{}, w)
+		n, err := codec.Encode(testdata.MyStruct1{}, w)
 		assertfatal.EqualError(err, wantErr, t)
 		assertfatal.Equal(n, 1, t)
 	})
 
 	t.Run("Failed to unmarshal DTM", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 
@@ -207,14 +179,14 @@ func TestCodecJSON(t *testing.T) {
 	})
 
 	t.Run("Unrecognized DTM", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 
@@ -231,14 +203,14 @@ func TestCodecJSON(t *testing.T) {
 	})
 
 	t.Run("Failed to unmarshal byte slice", func(t *testing.T) {
-		codec := NewCodec[MyInterface, MyInterface](
+		codec := NewCodec[testdata.MyInterface, testdata.MyInterface](
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[MyStruct1](),
-				reflect.TypeFor[MyStruct2](),
+				reflect.TypeFor[testdata.MyStruct1](),
+				reflect.TypeFor[testdata.MyStruct2](),
 			},
 		)
 

@@ -9,7 +9,7 @@ import (
 	"github.com/cmd-stream/core-go"
 	"github.com/cmd-stream/transport-go"
 	com "github.com/mus-format/common-go"
-	dts "github.com/mus-format/dts-stream-go"
+	"github.com/mus-format/dts-stream-go"
 	"github.com/mus-format/mus-stream-go/ord"
 )
 
@@ -42,16 +42,20 @@ func NewClientCodec[T any](cmds []reflect.Type, results []reflect.Type) (
 func NewCodec[T, V any](types1 []reflect.Type, types2 []reflect.Type) (
 	codec Codec[T, V],
 ) {
+	if len(types1) == 0 {
+		panic(errorPrefix + "types1 is empty")
+	}
+	if len(types2) == 0 {
+		panic(errorPrefix + "types2 is empty")
+	}
 	codec = Codec[T, V]{
 		typeMap: make(map[reflect.Type]com.DTM),
-		dtmMap:  make(map[com.DTM]reflect.Type),
+		dtmSl:   make([]reflect.Type, len(types2)),
 	}
 	for i, t := range types1 {
 		codec.typeMap[t] = com.DTM(i)
 	}
-	for i, t := range types2 {
-		codec.dtmMap[com.DTM(i)] = t
-	}
+	copy(codec.dtmSl, types2)
 	return
 }
 
@@ -61,7 +65,7 @@ func NewCodec[T, V any](types1 []reflect.Type, types2 []reflect.Type) (
 // can be decoded.
 type Codec[T, V any] struct {
 	typeMap map[reflect.Type]com.DTM
-	dtmMap  map[com.DTM]reflect.Type
+	dtmSl   []reflect.Type
 }
 
 // Encode serializes a value of type T to the given transport.Writer.
@@ -97,23 +101,23 @@ func (c Codec[T, V]) Decode(r transport.Reader) (v V, n int, err error) {
 		err = NewFailedToUnmarshalDTM(err)
 		return
 	}
-	t, pst := c.dtmMap[dtm]
-	if !pst {
+	if dtm < 0 || dtm >= com.DTM(len(c.dtmSl)) {
 		err = NewUnrecognizedDTM(dtm)
 		return
 	}
+	t := c.dtmSl[dtm]
 	bs, n1, err := ord.ByteSlice.Unmarshal(r)
 	n += n1
 	if err != nil {
 		err = NewFailedToUnmarshalByteSlice(err)
 		return
 	}
-	val := reflect.New(t).Interface()
-	err = json.Unmarshal(bs, val)
+	ptr := reflect.New(t)
+	err = json.Unmarshal(bs, ptr.Interface())
 	if err != nil {
 		err = NewFailedToUnmarshalJSON(err)
 		return
 	}
-	v = reflect.ValueOf(val).Elem().Interface().(V)
+	v = ptr.Elem().Interface().(V)
 	return
 }

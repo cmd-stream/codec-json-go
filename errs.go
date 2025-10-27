@@ -7,12 +7,12 @@ import (
 	com "github.com/mus-format/common-go"
 )
 
-const errorPrefix = "codec-json: "
+const errorPrefix = "codecjson: "
 
 // NewUnrecognizedType returns an error indicating that an unsupported type
 // was encountered during encoding.
 func NewUnrecognizedType(t reflect.Type) error {
-	return fmt.Errorf(errorPrefix+"unrecognized type: %v", t)
+	return fmt.Errorf(errorPrefix+"unrecognized type: %T", t)
 }
 
 // NewFailedToMarshalDTM returns an error indicating that the data type marker
@@ -36,7 +36,7 @@ func NewFailedToMarshalByteSlice(err error) error {
 // NewFailedToUnmarshalDTM returns an error indicating that the data type
 // marker (DTM) could not be unmarshaled.
 func NewFailedToUnmarshalDTM(err error) error {
-	return fmt.Errorf(errorPrefix+"failed to unmarshal DTM: %v", err)
+	return fmt.Errorf(errorPrefix+"failed to unmarshal DTM: %w", err)
 }
 
 // NewUnrecognizedDTM returns an error indicating that an unknown data type
@@ -48,11 +48,11 @@ func NewUnrecognizedDTM(dtm com.DTM) error {
 // NewFailedToUnmarshalByteSlice returns an error indicating that a byte slice
 // could not be unmarshaled.
 func NewFailedToUnmarshalByteSlice(err error) error {
-	return fmt.Errorf(errorPrefix+"failed to unmarshal byte slice: %v", err)
+	return fmt.Errorf(errorPrefix+"failed to unmarshal byte slice: %w", err)
 }
 
 // NewFailedToUnmarshalJSON returns an error indicating that JSON unmarshaling
 // failed.
 func NewFailedToUnmarshalJSON(err error) error {
-	return fmt.Errorf(errorPrefix+"failed to unmarshal JSON: %v", err)
+	return fmt.Errorf(errorPrefix+"failed to unmarshal JSON: %w", err)
 }
