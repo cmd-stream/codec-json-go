@@ -1,39 +1,15 @@
-// Package codecjson provides a JSON-based codec implementation for
-// cmd-stream-go.
-package codecjson
+// Package codec provides a JSON-based codec implementation for cmd-stream-go.
+package codec
 
 import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/cmd-stream/core-go"
 	"github.com/cmd-stream/transport-go"
 	com "github.com/mus-format/common-go"
 	"github.com/mus-format/dts-stream-go"
 	"github.com/mus-format/mus-stream-go/ord"
 )
-
-// NewServerCodec creates a Codec for the server side.
-//
-// The server codec encodes Results and decodes Commands.
-// The cmds slice lists Command types the server can handle.
-// The results slice lists Result types that can be returned to the client.
-func NewServerCodec[T any](cmds []reflect.Type, results []reflect.Type) (
-	codec Codec[core.Result, core.Cmd[T]],
-) {
-	return NewCodec[core.Result, core.Cmd[T]](results, cmds)
-}
-
-// NewClientCodec creates a Codec for the client side.
-//
-// The client codec encodes Commands and decodes Results.
-// The cmds slice lists Command types the client can send.
-// The results slice lists Result types the client expects to receive.
-func NewClientCodec[T any](cmds []reflect.Type, results []reflect.Type) (
-	codec Codec[core.Cmd[T], core.Result],
-) {
-	return NewCodec[core.Cmd[T], core.Result](cmds, results)
-}
 
 // NewCodec constructs a Codec with explicit type mappings.
 //

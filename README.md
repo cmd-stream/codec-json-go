@@ -8,6 +8,7 @@ allowing type-safe serialization across network boundaries.
 ## Example
 
 ```go
+
 var (
   cmdTypes = []reflect.Type{
     reflect.TypeFor[YourCmd](),
@@ -17,8 +18,7 @@ var (
     reflect.TypeFor[YourResult](),
     // ...
   }
-
-  serverCodec = codecjson.NewServerCodec(cmdTypes, resultTypes)
-  clientCodec = codecjson.NewClientCodec(cmdTypes, resultTypes)
+  serverCodec = codec.NewServerCodec(cmdTypes, resultTypes)
+  clientCodec = codec.NewClientCodec(cmdTypes, resultTypes)
 )
 ```
