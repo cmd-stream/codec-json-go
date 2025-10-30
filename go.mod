@@ -2,10 +2,8 @@ module github.com/cmd-stream/codec-json-go
 
 go 1.24.1
 
-replace github.com/cmd-stream/codec-generic-go => ../codec-generic-go
-
 require (
-	github.com/cmd-stream/codec-generic-go v0.0.0
+	github.com/cmd-stream/codec-generic-go v0.0.0-20251030012221-8ba570d827d9
 	github.com/cmd-stream/core-go v0.0.0-20251027204658-b87de59c010f
 	github.com/cmd-stream/transport-go v0.0.0-20251027205650-194496708c59
 	github.com/ymz-ncnk/assert v0.0.0-20250528151733-c41b2fca7933

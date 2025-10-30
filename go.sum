@@ -1,3 +1,5 @@
+github.com/cmd-stream/codec-generic-go v0.0.0-20251030012221-8ba570d827d9 h1:JWvrHwLwDBaTh+clEkt8m8gT9zs1QJVT36m2FoAwno4=
+github.com/cmd-stream/codec-generic-go v0.0.0-20251030012221-8ba570d827d9/go.mod h1:MyhWThUjakKFt6tTFPRcvqKA2mG48dlsCwEn3fz05tg=
 github.com/cmd-stream/core-go v0.0.0-20251027204658-b87de59c010f h1:iADLWy9Mms77uqwSzDQGdbmLhV3Cbe8vjxXZlwJbtkA=
 github.com/cmd-stream/core-go v0.0.0-20251027204658-b87de59c010f/go.mod h1:cDnp3kDEWudlKh2Qx4mziDvfpR4WJftjMe0aH14+cNo=
 github.com/cmd-stream/transport-go v0.0.0-20251027205650-194496708c59 h1:0IUJX8EFwW1gHwlcOJcMKRi1uequLA54X9jccua/tMA=
