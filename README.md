@@ -1,7 +1,7 @@
 # codec-json-go
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cmd-stream/codec-json-go.svg)](https://pkg.go.dev/github.com/cmd-stream/codec-json-go)
-[![GoReportCard](https://goreportcard.com/badge/cmd-stream/codec-json-go)](https://goreportcard.com/report/github.com/cmd-stream/codecs-json-go)
+[![GoReportCard](https://goreportcard.com/badge/cmd-stream/codec-json-go)](https://goreportcard.com/report/github.com/cmd-stream/codec-json-go)
 [![codecov](https://codecov.io/gh/cmd-stream/codec-json-go/graph/badge.svg?token=nu4ycOC9bT)](https://codecov.io/gh/cmd-stream/codec-json-go)
 
 **codec-json-go** provides a JSON-based codec for [cmd-stream-go](https://github.com/cmd-stream/cmd-stream-go).
