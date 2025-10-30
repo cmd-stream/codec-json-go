@@ -5,11 +5,17 @@
 It maps concrete Command and Result types to internal identifiers,
 allowing type-safe serialization across network boundaries.
 
-## Example
+## How To
 
 ```go
+import (
+  "reflect"
+  codec "github.com/cmd-stream/codec-json-go"
+)
 
 var (
+  // Note: The order of types matters — two codecs created with the same types
+  // in a different order are not considered equal.
   cmdTypes = []reflect.Type{
     reflect.TypeFor[YourCmd](),
     // ...

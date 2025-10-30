@@ -1,31 +1,44 @@
 package testdata
 
-import "fmt"
+import (
+	"context"
+	"time"
 
-type MyInterface interface {
-	Print()
-}
+	"github.com/cmd-stream/core-go"
+)
 
-type MyStruct1 struct {
+type Cmd1 struct {
 	X int
 }
 
-func (s MyStruct1) Print() {
-	fmt.Println("MyStruct1")
+func (c Cmd1) Exec(ctx context.Context, seq core.Seq, at time.Time,
+	receiver any, proxy core.Proxy,
+) error {
+	return nil
 }
 
-type MyStruct2 struct {
+type Cmd2 struct {
 	Y string
 }
 
-func (s MyStruct2) Print() {
-	fmt.Println("MyStruct2")
+func (c Cmd2) Exec(ctx context.Context, seq core.Seq, at time.Time,
+	receiver any, proxy core.Proxy,
+) error {
+	return nil
 }
 
-type MyStruct3 struct {
-	Z float64
+type Result1 struct {
+	X int
 }
 
-func (s MyStruct3) Print() {
-	fmt.Println("MyStruct3")
+func (r Result1) LastOne() bool {
+	return true
+}
+
+type Result2 struct {
+	Y string
+}
+
+func (r Result2) LastOne() bool {
+	return true
 }

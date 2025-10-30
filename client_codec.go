@@ -6,13 +6,15 @@ import (
 	"github.com/cmd-stream/core-go"
 )
 
-// NewClientCodec creates a Codec for the client side.
+// NewClientCodec creates a JSON Codec for the client side.
 //
-// The client codec encodes Commands and decodes Results.
-// The cmds slice lists Command types the client can send.
-// The results slice lists Result types the client expects to receive.
-func NewClientCodec[T any](cmds []reflect.Type, results []reflect.Type) (
+// The cmdTypes slice lists Command types the client can send.
+// The resultTypes slice lists Result types the client expects to receive.
+//
+// Note: The order of types matters — two codecs created with the same types
+// in a different order are not considered equal.
+func NewClientCodec[T any](cmdTypes []reflect.Type, resultTypes []reflect.Type) (
 	codec Codec[core.Cmd[T], core.Result],
 ) {
-	return NewCodec[core.Cmd[T], core.Result](cmds, results)
+	return NewCodec[core.Cmd[T], core.Result](cmdTypes, resultTypes)
 }
