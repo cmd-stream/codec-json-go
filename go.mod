@@ -1,6 +1,6 @@
 module github.com/cmd-stream/codec-json-go
 
-go 1.24.1
+go 1.23.0
 
 require (
 	github.com/cmd-stream/codec-generic-go v0.0.0-20251030012221-8ba570d827d9
