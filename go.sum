@@ -1,9 +1,11 @@
-github.com/cmd-stream/codec-generic-go v0.0.0-20251030012221-8ba570d827d9 h1:JWvrHwLwDBaTh+clEkt8m8gT9zs1QJVT36m2FoAwno4=
-github.com/cmd-stream/codec-generic-go v0.0.0-20251030012221-8ba570d827d9/go.mod h1:MyhWThUjakKFt6tTFPRcvqKA2mG48dlsCwEn3fz05tg=
-github.com/cmd-stream/core-go v0.0.0-20251027204658-b87de59c010f h1:iADLWy9Mms77uqwSzDQGdbmLhV3Cbe8vjxXZlwJbtkA=
-github.com/cmd-stream/core-go v0.0.0-20251027204658-b87de59c010f/go.mod h1:cDnp3kDEWudlKh2Qx4mziDvfpR4WJftjMe0aH14+cNo=
-github.com/cmd-stream/transport-go v0.0.0-20251027205650-194496708c59 h1:0IUJX8EFwW1gHwlcOJcMKRi1uequLA54X9jccua/tMA=
-github.com/cmd-stream/transport-go v0.0.0-20251027205650-194496708c59/go.mod h1:zhYpcQy7vhNSE6ZU5fZ/jRlqCc6i+oOm41DL8SUyyL4=
+github.com/cmd-stream/codec-generic-go v0.0.0-20251102041526-c9db158fec65 h1:evCdoXwvuNbZL70O7xltHh86NJRtcHayWOZtWBM9x3U=
+github.com/cmd-stream/codec-generic-go v0.0.0-20251102041526-c9db158fec65/go.mod h1:xH5eE+m63p9y8CCPzRCHxz38C3K5LLN/goTjf32h7dA=
+github.com/cmd-stream/core-go v0.0.0-20251102020427-f23e62426486 h1:W2nkjUDYccnWf6wQnwM5UZGSGiKUbaxV2DPs0BQhprA=
+github.com/cmd-stream/core-go v0.0.0-20251102020427-f23e62426486/go.mod h1:UDKu4nEJWsUAebqQAzMvlhf87zPS5Kf57+SSXXOrl2c=
+github.com/cmd-stream/testkit-go v0.0.0-20251102032516-b7342d69dc9f h1:tHANclzJpiPlnIQUcJh8YkouQ2XCvbjiNmI5X9xIah8=
+github.com/cmd-stream/testkit-go v0.0.0-20251102032516-b7342d69dc9f/go.mod h1:lXvkEKawzV+ukHhSsNd30J1wDAtZ8uQZMasHpqxXZns=
+github.com/cmd-stream/transport-go v0.0.0-20251102021115-2f2d348f4122 h1:ZLp7/NHm7bp/QhIqgYg2bqguoYkFYE4oyYXA4b6dzUk=
+github.com/cmd-stream/transport-go v0.0.0-20251102021115-2f2d348f4122/go.mod h1:0/rIfxXHFLKW1GrMHKs8MtjMMo93KIZUkhUN5Ycg494=
 github.com/mus-format/common-go v0.0.0-20251026152644-9f5ac6728d8a h1:tLF20eBk2jdZHOy3Kyv8Wh3KdhxnIDadmrmXYE7sprc=
 github.com/mus-format/common-go v0.0.0-20251026152644-9f5ac6728d8a/go.mod h1:6Dv72knd/gHi0Scn4OEFPQbnl7RrQlQDfUOOkKP/nZc=
 github.com/mus-format/dts-stream-go v0.9.1 h1:+BRsG76wAtLml6HOuhzgfgg7yC1cEcjTX31XkP16CE0=

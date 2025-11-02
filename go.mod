@@ -3,9 +3,10 @@ module github.com/cmd-stream/codec-json-go
 go 1.23.0
 
 require (
-	github.com/cmd-stream/codec-generic-go v0.0.0-20251030012221-8ba570d827d9
-	github.com/cmd-stream/core-go v0.0.0-20251027204658-b87de59c010f
-	github.com/cmd-stream/transport-go v0.0.0-20251027205650-194496708c59
+	github.com/cmd-stream/codec-generic-go v0.0.0-20251102041526-c9db158fec65
+	github.com/cmd-stream/core-go v0.0.0-20251102020427-f23e62426486
+	github.com/cmd-stream/testkit-go v0.0.0-20251102032516-b7342d69dc9f
+	github.com/cmd-stream/transport-go v0.0.0-20251102021115-2f2d348f4122
 	github.com/ymz-ncnk/assert v0.0.0-20250528151733-c41b2fca7933
 )
 

@@ -1,37 +1,37 @@
-package codec
+package codec_test
 
 import (
 	"encoding/json"
 	"reflect"
 	"testing"
 
-	"github.com/cmd-stream/codec-json-go/testdata"
+	"github.com/cmd-stream/codec-json-go"
+	tmocks "github.com/cmd-stream/testkit-go/mocks/transport"
 
-	tmock "github.com/cmd-stream/transport-go/testdata/mock"
 	assertfatal "github.com/ymz-ncnk/assert/fatal"
 )
 
 func TestServerCodec(t *testing.T) {
 	t.Run("Encoding should work", func(t *testing.T) {
 		wantDTM := 0
-		result := testdata.Result1{X: 10}
+		result := Result1{X: 10}
 		wantBs, err := json.Marshal(result)
 		assertfatal.EqualError(err, nil, t)
 		wantLen := len(wantBs)
 		wantN := 1 + 1 + wantLen
 
-		codec := NewServerCodec[any](
+		c := codec.NewServerCodec[any](
 			[]reflect.Type{
-				reflect.TypeFor[testdata.Cmd1](),
-				reflect.TypeFor[testdata.Cmd2](),
+				reflect.TypeFor[Cmd1](),
+				reflect.TypeFor[Cmd2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[testdata.Result1](),
-				reflect.TypeFor[testdata.Result2](),
+				reflect.TypeFor[Result1](),
+				reflect.TypeFor[Result2](),
 			},
 		)
 
-		w := tmock.NewWriter().RegisterWriteByte(func(b byte) error {
+		w := tmocks.NewWriter().RegisterWriteByte(func(b byte) error {
 			assertfatal.Equal(b, byte(wantDTM), t)
 			return nil
 		}).RegisterWriteByte(func(b byte) error {
@@ -42,31 +42,31 @@ func TestServerCodec(t *testing.T) {
 			return len(p), nil
 		})
 
-		n, err := codec.Encode(result, w)
+		n, err := c.Encode(result, w)
 		assertfatal.EqualError(err, nil, t)
 		assertfatal.Equal(n, wantN, t)
 	})
 
 	t.Run("Decoding should work", func(t *testing.T) {
 		wantDTM := 1
-		wantV := testdata.Cmd2{Y: "hello"}
+		wantV := Cmd2{Y: "hello"}
 		wantBs, err := json.Marshal(wantV)
 		assertfatal.EqualError(err, nil, t)
 		wantLen := len(wantBs)
 		wantN := 1 + 1 + wantLen
 
-		codec := NewServerCodec[any](
+		c := codec.NewServerCodec[any](
 			[]reflect.Type{
-				reflect.TypeFor[testdata.Cmd1](),
-				reflect.TypeFor[testdata.Cmd2](),
+				reflect.TypeFor[Cmd1](),
+				reflect.TypeFor[Cmd2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[testdata.Result1](),
-				reflect.TypeFor[testdata.Result2](),
+				reflect.TypeFor[Result1](),
+				reflect.TypeFor[Result2](),
 			},
 		)
 
-		r := tmock.NewReader().RegisterReadByte(func() (b byte, err error) {
+		r := tmocks.NewReader().RegisterReadByte(func() (b byte, err error) {
 			return byte(wantDTM), nil
 		}).RegisterReadByte(func() (b byte, err error) {
 			return byte(wantLen), nil
@@ -75,7 +75,7 @@ func TestServerCodec(t *testing.T) {
 			return wantLen, nil
 		})
 
-		v, n, err := codec.Decode(r)
+		v, n, err := c.Decode(r)
 		assertfatal.EqualError(err, nil, t)
 		assertfatal.Equal(n, wantN, t)
 		assertfatal.EqualDeep(v, wantV, t)

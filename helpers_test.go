@@ -1,4 +1,4 @@
-package testdata
+package codec_test
 
 import (
 	"context"
