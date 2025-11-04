@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/cmd-stream/codec-json-go"
+	"github.com/cmd-stream/codec-json-go/test/fixtures/cmds"
+	"github.com/cmd-stream/codec-json-go/test/fixtures/results"
 	tmocks "github.com/cmd-stream/testkit-go/mocks/transport"
 	assertfatal "github.com/ymz-ncnk/assert/fatal"
 )
@@ -13,7 +15,7 @@ import (
 func TestClientCodec(t *testing.T) {
 	t.Run("Encoding should work", func(t *testing.T) {
 		wantDTM := 0
-		cmd := Cmd1{X: 10}
+		cmd := cmds.Cmd1{X: 10}
 		wantBs, err := json.Marshal(cmd)
 		assertfatal.EqualError(err, nil, t)
 		wantLen := len(wantBs)
@@ -21,12 +23,12 @@ func TestClientCodec(t *testing.T) {
 
 		c := codec.NewClientCodec[any](
 			[]reflect.Type{
-				reflect.TypeFor[Cmd1](),
-				reflect.TypeFor[Cmd2](),
+				reflect.TypeFor[cmds.Cmd1](),
+				reflect.TypeFor[cmds.Cmd2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[Result1](),
-				reflect.TypeFor[Result2](),
+				reflect.TypeFor[results.Result1](),
+				reflect.TypeFor[results.Result2](),
 			},
 		)
 
@@ -48,7 +50,7 @@ func TestClientCodec(t *testing.T) {
 
 	t.Run("Decoding should work", func(t *testing.T) {
 		wantDTM := 1
-		wantV := Result2{Y: "hello"}
+		wantV := results.Result2{Y: "hello"}
 		wantBs, err := json.Marshal(wantV)
 		assertfatal.EqualError(err, nil, t)
 		wantLen := len(wantBs)
@@ -56,12 +58,12 @@ func TestClientCodec(t *testing.T) {
 
 		c := codec.NewClientCodec[any](
 			[]reflect.Type{
-				reflect.TypeFor[Cmd1](),
-				reflect.TypeFor[Cmd2](),
+				reflect.TypeFor[cmds.Cmd1](),
+				reflect.TypeFor[cmds.Cmd2](),
 			},
 			[]reflect.Type{
-				reflect.TypeFor[Result1](),
-				reflect.TypeFor[Result2](),
+				reflect.TypeFor[results.Result1](),
+				reflect.TypeFor[results.Result2](),
 			},
 		)
 
