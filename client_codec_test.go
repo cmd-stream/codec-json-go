@@ -6,18 +6,18 @@ import (
 	"testing"
 
 	"github.com/cmd-stream/codec-json-go"
-	"github.com/cmd-stream/codec-json-go/test/fixtures/cmds"
-	"github.com/cmd-stream/codec-json-go/test/fixtures/results"
-	tmocks "github.com/cmd-stream/testkit-go/mocks/transport"
+	"github.com/cmd-stream/codec-json-go/test/cmds"
+	"github.com/cmd-stream/codec-json-go/test/results"
+	tmock "github.com/cmd-stream/transport-go/test/mock"
 	assertfatal "github.com/ymz-ncnk/assert/fatal"
 )
 
 func TestClientCodec(t *testing.T) {
-	t.Run("Encoding should work", func(t *testing.T) {
+	t.Run("Encoding should succeed", func(t *testing.T) {
 		wantDTM := 0
 		cmd := cmds.Cmd1{X: 10}
 		wantBs, err := json.Marshal(cmd)
-		assertfatal.EqualError(err, nil, t)
+		assertfatal.EqualError(t, err, nil)
 		wantLen := len(wantBs)
 		wantN := 1 + 1 + wantLen
 
@@ -32,27 +32,27 @@ func TestClientCodec(t *testing.T) {
 			},
 		)
 
-		w := tmocks.NewWriter().RegisterWriteByte(func(b byte) error {
-			assertfatal.Equal(b, byte(wantDTM), t)
+		w := tmock.NewWriter().RegisterWriteByte(func(b byte) error {
+			assertfatal.Equal(t, b, byte(wantDTM))
 			return nil
 		}).RegisterWriteByte(func(b byte) error {
-			assertfatal.Equal(b, byte(wantLen), t)
+			assertfatal.Equal(t, b, byte(wantLen))
 			return nil
 		}).RegisterWrite(func(p []byte) (n int, err error) {
-			assertfatal.EqualDeep(p, wantBs, t)
+			assertfatal.EqualDeep(t, p, wantBs)
 			return len(p), nil
 		})
 
 		n, err := c.Encode(cmd, w)
-		assertfatal.EqualError(err, nil, t)
-		assertfatal.Equal(n, wantN, t)
+		assertfatal.EqualError(t, err, nil)
+		assertfatal.Equal(t, n, wantN)
 	})
 
-	t.Run("Decoding should work", func(t *testing.T) {
+	t.Run("Decoding should succeed", func(t *testing.T) {
 		wantDTM := 1
 		wantV := results.Result2{Y: "hello"}
 		wantBs, err := json.Marshal(wantV)
-		assertfatal.EqualError(err, nil, t)
+		assertfatal.EqualError(t, err, nil)
 		wantLen := len(wantBs)
 		wantN := 1 + 1 + wantLen
 
@@ -67,7 +67,7 @@ func TestClientCodec(t *testing.T) {
 			},
 		)
 
-		r := tmocks.NewReader().RegisterReadByte(func() (b byte, err error) {
+		r := tmock.NewReader().RegisterReadByte(func() (b byte, err error) {
 			return byte(wantDTM), nil
 		}).RegisterReadByte(func() (b byte, err error) {
 			return byte(wantLen), nil
@@ -77,8 +77,8 @@ func TestClientCodec(t *testing.T) {
 		})
 
 		v, n, err := c.Decode(r)
-		assertfatal.EqualError(err, nil, t)
-		assertfatal.Equal(n, wantN, t)
-		assertfatal.EqualDeep(v, wantV, t)
+		assertfatal.EqualError(t, err, nil)
+		assertfatal.Equal(t, n, wantN)
+		assertfatal.EqualDeep(t, v, wantV)
 	})
 }

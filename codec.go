@@ -1,4 +1,4 @@
-// Package codec provides a JSON-based codec implementation for cmd-stream-go.
+// Package codec provides a JSON-based codec implementation for cmd-stream.
 package codec
 
 import (
