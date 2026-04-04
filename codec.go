@@ -5,47 +5,47 @@ import (
 	"fmt"
 	"reflect"
 
-	codecgnrc "github.com/cmd-stream/codec-generic-go"
-	"github.com/cmd-stream/transport-go"
+	"github.com/cmd-stream/cmd-stream-go/transport"
+	gnrc "github.com/cmd-stream/codec-generic-go"
 )
 
-const errorPrefix = "codecjson: "
+const ErrorPrefix = "codecjson: "
 
-// NewCodec constructs a JSON Codec.
-//
-// Parameters:
-//   - types1 lists the Go types that can be encoded.
-//   - types2 lists the Go types that can be decoded.
-func NewCodec[T, V any](types1 []reflect.Type,
-	types2 []reflect.Type,
-) Codec[T, V] {
-	return Codec[T, V]{
-		codecgnrc.NewCodec(types1, types2, Serializer[T, V]{}),
-	}
+// codec represents a generic type-safe JSON codec.
+// T is the type used for encoding, V is the type used for decoding.
+type codec[T, V any] struct {
+	gnrc.Codec[T, V]
 }
 
-// Codec represents a generic type-safe codec for encoding and decoding values.
-// T is the type used for encoding, V is the type used for decoding.
-type Codec[T, V any] struct {
-	codecgnrc.Codec[T, V]
+// newCodec constructs a JSON codec.
+//
+// Parameters:
+//   - types1 lists the Go types that will be encoded by the Serializer.
+//   - types2 lists the Go types that will be decoded by the Serializer.
+func newCodec[T, V any](types1 []reflect.Type,
+	types2 []reflect.Type,
+) codec[T, V] {
+	return codec[T, V]{
+		gnrc.NewCodec(types1, types2, Serializer[T, V]{}),
+	}
 }
 
 // Encode writes a value of type T to the given transport.Writer.
 // Returns the total number of bytes written and any error.
-func (c Codec[T, V]) Encode(t T, w transport.Writer) (n int, err error) {
+func (c codec[T, V]) Encode(t T, w transport.Writer) (n int, err error) {
 	n, err = c.Codec.Encode(t, w)
 	if err != nil {
-		err = fmt.Errorf(errorPrefix+"%w", err)
+		err = fmt.Errorf(ErrorPrefix+"%w", err)
 	}
 	return
 }
 
 // Decode reads a value of type V from the given transport.Reader.
 // Returns the decoded value, total bytes read, and any error.
-func (c Codec[T, V]) Decode(r transport.Reader) (v V, n int, err error) {
+func (c codec[T, V]) Decode(r transport.Reader) (v V, n int, err error) {
 	v, n, err = c.Codec.Decode(r)
 	if err != nil {
-		err = fmt.Errorf(errorPrefix+"%w", err)
+		err = fmt.Errorf(ErrorPrefix+"%w", err)
 	}
 	return
 }

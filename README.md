@@ -4,17 +4,17 @@
 [![GoReportCard](https://goreportcard.com/badge/cmd-stream/codec-json-go)](https://goreportcard.com/report/github.com/cmd-stream/codec-json-go)
 [![codecov](https://codecov.io/gh/cmd-stream/codec-json-go/graph/badge.svg?token=nu4ycOC9bT)](https://codecov.io/gh/cmd-stream/codec-json-go)
 
-**codec-json-go** provides a JSON-based codec for [cmd-stream-go](https://github.com/cmd-stream/cmd-stream-go).
+**codec-json** provides a JSON-based codec for [cmd-stream](https://github.com/cmd-stream/cmd-stream-go).
 
-It maps concrete Command and Result types to internal identifiers,
-allowing type-safe serialization across network boundaries.
+It maps concrete Command and Result types to internal identifiers, allowing 
+type-safe serialization across network boundaries.
 
 ## How To
 
 ```go
 import (
   "reflect"
-  codec "github.com/cmd-stream/codec-json-go"
+  cdc "github.com/cmd-stream/codec-json-go"
 )
 
 var (
@@ -28,7 +28,7 @@ var (
     reflect.TypeFor[YourResult](),
     // ...
   }
-  serverCodec = codec.NewServerCodec(cmdTypes, resultTypes)
-  clientCodec = codec.NewClientCodec(cmdTypes, resultTypes)
+  serverCodec = cdc.NewServerCodec(cmdTypes, resultTypes)
+  clientCodec = cdc.NewClientCodec(cmdTypes, resultTypes)
 )
 ```
