@@ -6,7 +6,7 @@ import (
 	"reflect"
 
 	"github.com/cmd-stream/cmd-stream-go/transport"
-	gnrc "github.com/cmd-stream/codec-generic-go"
+	cdc "github.com/cmd-stream/codec-go"
 )
 
 const ErrorPrefix = "codecjson: "
@@ -14,7 +14,7 @@ const ErrorPrefix = "codecjson: "
 // codec represents a generic type-safe JSON codec.
 // T is the type used for encoding, V is the type used for decoding.
 type codec[T, V any] struct {
-	gnrc.Codec[T, V]
+	cdc.Codec[T, V]
 }
 
 // newCodec constructs a JSON codec.
@@ -26,7 +26,7 @@ func newCodec[T, V any](types1 []reflect.Type,
 	types2 []reflect.Type,
 ) codec[T, V] {
 	return codec[T, V]{
-		gnrc.NewCodec(types1, types2, Serializer[T, V]{}),
+		cdc.NewCodec(types1, types2, Serializer[T, V]{}),
 	}
 }
 
