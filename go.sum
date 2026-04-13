@@ -1,11 +1,11 @@
-github.com/cmd-stream/cmd-stream-go v0.5.2 h1:9YM7Jo4Zht8gqBn29ponzIbCVnuQF5CY28+E18scogk=
-github.com/cmd-stream/cmd-stream-go v0.5.2/go.mod h1:YVFSofjwCFom+oGYCZBCdvLXH3JuVIcfcmLTtnfeyBY=
-github.com/cmd-stream/codec-go v0.0.0-20260411034229-e83a42567a3a h1:WCTPbASxCdwC8bfujW+H+z0wZ7A2LFTrCCe5+KYmuZI=
-github.com/cmd-stream/codec-go v0.0.0-20260411034229-e83a42567a3a/go.mod h1:gYnWWF0p3e98K40BfrsguiSM0uz/DYdeT3x/yqm9im0=
+github.com/cmd-stream/cmd-stream-go v0.6.0 h1:va19Z9PyCvgfTW7JCWbbawYixM97UiwHAvJqq7Iw290=
+github.com/cmd-stream/cmd-stream-go v0.6.0/go.mod h1:5dBwhiyWYRDcLGZj8IVBTdWDdT0YO+erFr6HijH/Q6g=
+github.com/cmd-stream/codec-go v0.0.0-20260413003835-6ba4c28f0611 h1:nS2PCMAHh4a8MYFzLeuJmvXGyULyf7+nbPsSOuuG/1E=
+github.com/cmd-stream/codec-go v0.0.0-20260413003835-6ba4c28f0611/go.mod h1:cDS61fvSRHa26XIJR6sxy0ynpg0H0VLZwXVBb9o1gPw=
 github.com/mus-format/common-go v0.0.0-20260324174526-3d8f1741b5a2 h1:oob6maWbVV+yevC1EawGOSyqcU2Cvj3ZWAF0FKoT+uU=
 github.com/mus-format/common-go v0.0.0-20260324174526-3d8f1741b5a2/go.mod h1:XhSTID+Ln32bHgJQjtizWsMFY219tfWa4sObJxHhATw=
-github.com/mus-format/mus-stream-go v0.9.1 h1:C4fosQebagLHWCpu++JRvH0/rG9uGplU3wyvfO65uy4=
-github.com/mus-format/mus-stream-go v0.9.1/go.mod h1:Ibe+4qwbIqFhzA27YOLZL8R0wlY19rRYCHqWWPU+kfE=
+github.com/mus-format/mus-stream-go v0.10.0 h1:/c0tWtU6wupQEtoRiYuqcdGbKCuahUSk672jlxGArAY=
+github.com/mus-format/mus-stream-go v0.10.0/go.mod h1:Ibe+4qwbIqFhzA27YOLZL8R0wlY19rRYCHqWWPU+kfE=
 github.com/ymz-ncnk/assert v0.0.0-20260108210721-155bc9aa4282 h1:lU0oPVPOGW0BZwLwAqfSTh1yxhFbwXDv/UAYY54QTq0=
 github.com/ymz-ncnk/assert v0.0.0-20260108210721-155bc9aa4282/go.mod h1:+lSOTrCyOPuvc0xuvK4uKhgQ0Ar3U/HJPpJZg73kvgE=
 github.com/ymz-ncnk/mok v0.2.2 h1:MkHkli+n3Ci6Xla9e/6LApJZ6/XjLB6AB3IXDr9a7hk=
