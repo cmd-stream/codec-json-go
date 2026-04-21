@@ -21,3 +21,10 @@ func NewServerCodec[T any](cmdTypes []reflect.Type, resultTypes []reflect.Type) 
 ) {
 	return newCodec[core.Result, core.Cmd[T]](resultTypes, cmdTypes)
 }
+
+// NewServerCodecWith creates a JSON codec for the server side using the
+// provided Registry.
+func NewServerCodecWith[T any](registry *Registry[T]) ServerCodec[T] {
+	return NewServerCodec[T](registry.Cmds(), registry.Results())
+}
+

@@ -8,7 +8,7 @@ import (
 
 	tmock "github.com/cmd-stream/cmd-stream-go/test/mock/transport"
 	"github.com/cmd-stream/codec-json-go"
-	cdc "github.com/cmd-stream/codec-json-go"
+	cdcjson "github.com/cmd-stream/codec-json-go"
 	"github.com/cmd-stream/codec-json-go/test"
 	assertfatal "github.com/ymz-ncnk/assert/fatal"
 )
@@ -38,7 +38,7 @@ func TestServerCodec_Encoding(t *testing.T) {
 			return len(p), nil
 		},
 	)
-	codec := cdc.NewServerCodec[any](
+	codec := cdcjson.NewServerCodec[any](
 		[]reflect.Type{
 			reflect.TypeFor[test.Cmd1](),
 			reflect.TypeFor[test.Cmd2](),
@@ -62,13 +62,13 @@ func TestServerCodec_EncodeError(t *testing.T) {
 	writer.RegisterWriteByte(func(b byte) error {
 		return wantErr
 	})
-	codec := cdc.NewServerCodec[any](
+	codec := cdcjson.NewServerCodec[any](
 		[]reflect.Type{reflect.TypeFor[test.Cmd1]()},
 		[]reflect.Type{reflect.TypeFor[test.Result1]()},
 	)
 	_, err := codec.Encode(result, writer)
 	assertfatal.EqualDeep(t, errors.Is(err, wantErr), true)
-	assertfatal.EqualDeep(t, err.Error()[:len(cdc.ErrorPrefix)], cdc.ErrorPrefix)
+	assertfatal.EqualDeep(t, err.Error()[:len(cdcjson.ErrorPrefix)], cdcjson.ErrorPrefix)
 }
 
 func TestServerCodec_Decoding(t *testing.T) {
@@ -90,7 +90,7 @@ func TestServerCodec_Decoding(t *testing.T) {
 			return wantLen, nil
 		},
 	)
-	codec := cdc.NewServerCodec[any](
+	codec := cdcjson.NewServerCodec[any](
 		[]reflect.Type{
 			reflect.TypeFor[test.Cmd1](),
 			reflect.TypeFor[test.Cmd2](),
@@ -120,5 +120,60 @@ func TestServerCodec_DecodeError(t *testing.T) {
 	)
 	_, _, err := codec.Decode(reader)
 	assertfatal.EqualDeep(t, errors.Is(err, wantErr), true)
-	assertfatal.EqualDeep(t, err.Error()[:len(cdc.ErrorPrefix)], cdc.ErrorPrefix)
+	assertfatal.EqualDeep(t, err.Error()[:len(cdcjson.ErrorPrefix)], cdcjson.ErrorPrefix)
+}
+
+func TestServerCodecWith(t *testing.T) {
+	var (
+		wantCmdDTM = 0
+		cmd        = test.Cmd1{X: 10}
+		wantBs, _  = json.Marshal(cmd)
+		reader     = tmock.NewReader()
+
+		wantResultDTM   = 0
+		result          = test.Result1{X: 10}
+		wantResultBs, _ = json.Marshal(result)
+		writer          = tmock.NewWriter()
+	)
+	reader.RegisterReadByte(
+		func() (b byte, err error) { return byte(wantCmdDTM), nil },
+	).RegisterReadByte(
+		func() (b byte, err error) { return byte(len(wantBs)), nil },
+	).RegisterRead(
+		func(p []byte) (n int, err error) {
+			copy(p, wantBs)
+			return len(wantBs), nil
+		},
+	)
+	writer.RegisterWriteByte(
+		func(b byte) error {
+			assertfatal.Equal(t, b, byte(wantResultDTM))
+			return nil
+		},
+	).RegisterWriteByte(
+		func(b byte) error {
+			assertfatal.Equal(t, b, byte(len(wantResultBs)))
+			return nil
+		},
+	).RegisterWrite(
+		func(p []byte) (n int, err error) {
+			assertfatal.EqualDeep(t, p, wantResultBs)
+			return len(p), nil
+		},
+	)
+
+	registry := cdcjson.NewRegistry(
+		cdcjson.WithCmd[any, test.Cmd1](),
+		cdcjson.WithResult[any, test.Result1](),
+	)
+	codec := cdcjson.NewServerCodecWith(registry)
+
+	// Verify Decoding
+	v, _, err := codec.Decode(reader)
+	assertfatal.EqualError(t, err, nil)
+	assertfatal.EqualDeep(t, v, cmd)
+
+	// Verify Encoding
+	_, err = codec.Encode(result, writer)
+	assertfatal.EqualError(t, err, nil)
 }
