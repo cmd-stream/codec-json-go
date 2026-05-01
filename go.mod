@@ -3,8 +3,8 @@ module github.com/cmd-stream/codec-json-go
 go 1.24.1
 
 require (
-	github.com/cmd-stream/cmd-stream-go v0.6.1
-	github.com/cmd-stream/codec-go v0.0.0-20260421172244-cee5b400964e
+	github.com/cmd-stream/cmd-stream-go v0.6.2
+	github.com/cmd-stream/codec-go v0.0.0-20260501205648-889ca4b92300
 	github.com/ymz-ncnk/assert v0.0.0-20260108210721-155bc9aa4282
 )
 

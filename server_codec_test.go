@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	tmock "github.com/cmd-stream/cmd-stream-go/test/mock/transport"
+	cmock "github.com/cmd-stream/cmd-stream-go/test/mock"
 	"github.com/cmd-stream/codec-json-go"
 	cdcjson "github.com/cmd-stream/codec-json-go"
 	"github.com/cmd-stream/codec-json-go/test"
@@ -20,7 +20,7 @@ func TestServerCodec_Encoding(t *testing.T) {
 		wantBs, _ = json.Marshal(result)
 		wantLen   = len(wantBs)
 		wantN     = 1 + 1 + wantLen
-		writer    = tmock.NewWriter()
+		writer    = cmock.NewWriter()
 	)
 	writer.RegisterWriteByte(
 		func(b byte) error {
@@ -57,7 +57,7 @@ func TestServerCodec_EncodeError(t *testing.T) {
 	var (
 		result  = test.Result1{X: 10}
 		wantErr = errors.New("write error")
-		writer  = tmock.NewWriter()
+		writer  = cmock.NewWriter()
 	)
 	writer.RegisterWriteByte(func(b byte) error {
 		return wantErr
@@ -78,7 +78,7 @@ func TestServerCodec_Decoding(t *testing.T) {
 		wantBs, _ = json.Marshal(wantV)
 		wantLen   = len(wantBs)
 		wantN     = 1 + 1 + wantLen
-		reader    = tmock.NewReader()
+		reader    = cmock.NewReader()
 	)
 	reader.RegisterReadByte(
 		func() (b byte, err error) { return byte(wantDTM), nil },
@@ -109,7 +109,7 @@ func TestServerCodec_Decoding(t *testing.T) {
 func TestServerCodec_DecodeError(t *testing.T) {
 	var (
 		wantErr = errors.New("read error")
-		reader  = tmock.NewReader()
+		reader  = cmock.NewReader()
 	)
 	reader.RegisterReadByte(func() (b byte, err error) {
 		return 0, wantErr
@@ -128,12 +128,12 @@ func TestServerCodecWith(t *testing.T) {
 		wantCmdDTM = 0
 		cmd        = test.Cmd1{X: 10}
 		wantBs, _  = json.Marshal(cmd)
-		reader     = tmock.NewReader()
+		reader     = cmock.NewReader()
 
 		wantResultDTM   = 0
 		result          = test.Result1{X: 10}
 		wantResultBs, _ = json.Marshal(result)
-		writer          = tmock.NewWriter()
+		writer          = cmock.NewWriter()
 	)
 	reader.RegisterReadByte(
 		func() (b byte, err error) { return byte(wantCmdDTM), nil },
