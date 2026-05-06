@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/cmd-stream/cmd-stream-go v0.7.2
-	github.com/cmd-stream/codec-go v0.0.0-20260506155909-07f3ee04b9b2
+	github.com/cmd-stream/codec-go v0.0.0-20260506164940-a9647c685e04
 	github.com/mus-format/common-go v0.0.0-20260324174526-3d8f1741b5a2
 	github.com/ymz-ncnk/assert v0.0.0-20260108210721-155bc9aa4282
 )
