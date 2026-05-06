@@ -7,16 +7,16 @@ import (
 	"testing"
 
 	cmock "github.com/cmd-stream/cmd-stream-go/test/mock"
-	"github.com/cmd-stream/codec-json-go"
 	cdcjson "github.com/cmd-stream/codec-json-go"
-	"github.com/cmd-stream/codec-json-go/test"
+	cdctest "github.com/cmd-stream/codec-go/test"
+	com "github.com/mus-format/common-go"
 	assertfatal "github.com/ymz-ncnk/assert/fatal"
 )
 
 func TestClientCodec_Encoding(t *testing.T) {
 	var (
 		wantDTM   = 0
-		cmd       = test.Cmd1{X: 10}
+		cmd       = cdctest.Cmd1{A: 10, B: 20}
 		wantBs, _ = json.Marshal(cmd)
 		wantLen   = len(wantBs)
 		wantN     = 1 + 1 + wantLen
@@ -40,12 +40,12 @@ func TestClientCodec_Encoding(t *testing.T) {
 	)
 	codec := cdcjson.NewClientCodec[any](
 		[]reflect.Type{
-			reflect.TypeFor[test.Cmd1](),
-			reflect.TypeFor[test.Cmd2](),
+			reflect.TypeFor[cdctest.Cmd1](),
+			reflect.TypeFor[cdctest.Cmd2](),
 		},
 		[]reflect.Type{
-			reflect.TypeFor[test.Result1](),
-			reflect.TypeFor[test.Result2](),
+			reflect.TypeFor[cdctest.Result1](),
+			reflect.TypeFor[cdctest.Result2](),
 		},
 	)
 	n, err := codec.Encode(cmd, writer)
@@ -55,7 +55,7 @@ func TestClientCodec_Encoding(t *testing.T) {
 
 func TestClientCodec_EncodeError(t *testing.T) {
 	var (
-		cmd     = test.Cmd1{X: 10}
+		cmd     = cdctest.Cmd1{A: 10, B: 20}
 		wantErr = errors.New("write error")
 		writer  = cmock.NewWriter()
 	)
@@ -63,8 +63,8 @@ func TestClientCodec_EncodeError(t *testing.T) {
 		return wantErr
 	})
 	codec := cdcjson.NewClientCodec[any](
-		[]reflect.Type{reflect.TypeFor[test.Cmd1]()},
-		[]reflect.Type{reflect.TypeFor[test.Result1]()},
+		[]reflect.Type{reflect.TypeFor[cdctest.Cmd1]()},
+		[]reflect.Type{reflect.TypeFor[cdctest.Result1]()},
 	)
 	_, err := codec.Encode(cmd, writer)
 	assertfatal.EqualDeep(t, errors.Is(err, wantErr), true)
@@ -74,7 +74,7 @@ func TestClientCodec_EncodeError(t *testing.T) {
 func TestClientCodec_Decoding(t *testing.T) {
 	var (
 		wantDTM   = 1
-		wantV     = test.Result2{Y: "hello"}
+		wantV     = cdctest.Result2{Y: "hello"}
 		wantBs, _ = json.Marshal(wantV)
 		wantLen   = len(wantBs)
 		wantN     = 1 + 1 + wantLen
@@ -92,12 +92,12 @@ func TestClientCodec_Decoding(t *testing.T) {
 	)
 	codec := cdcjson.NewClientCodec[any](
 		[]reflect.Type{
-			reflect.TypeFor[test.Cmd1](),
-			reflect.TypeFor[test.Cmd2](),
+			reflect.TypeFor[cdctest.Cmd1](),
+			reflect.TypeFor[cdctest.Cmd2](),
 		},
 		[]reflect.Type{
-			reflect.TypeFor[test.Result1](),
-			reflect.TypeFor[test.Result2](),
+			reflect.TypeFor[cdctest.Result1](),
+			reflect.TypeFor[cdctest.Result2](),
 		},
 	)
 	v, n, err := codec.Decode(reader)
@@ -114,9 +114,9 @@ func TestClientCodec_DecodeError(t *testing.T) {
 	reader.RegisterReadByte(func() (b byte, err error) {
 		return 0, wantErr
 	})
-	codec := codec.NewClientCodec[any](
-		[]reflect.Type{reflect.TypeFor[test.Cmd1]()},
-		[]reflect.Type{reflect.TypeFor[test.Result1]()},
+	codec := cdcjson.NewClientCodec[any](
+		[]reflect.Type{reflect.TypeFor[cdctest.Cmd1]()},
+		[]reflect.Type{reflect.TypeFor[cdctest.Result1]()},
 	)
 	_, _, err := codec.Decode(reader)
 	assertfatal.EqualDeep(t, errors.Is(err, wantErr), true)
@@ -126,12 +126,12 @@ func TestClientCodec_DecodeError(t *testing.T) {
 func TestClientCodecWith(t *testing.T) {
 	var (
 		wantDTM   = 0
-		cmd       = test.Cmd1{X: 10}
+		cmd       = cdctest.Cmd1{A: 10, B: 20}
 		wantBs, _ = json.Marshal(cmd)
 		writer    = cmock.NewWriter()
 
 		wantResultDTM   = 0
-		wantV           = test.Result1{X: 10}
+		wantV           = cdctest.Result1(10)
 		wantResultBs, _ = json.Marshal(wantV)
 		reader          = cmock.NewReader()
 	)
@@ -163,8 +163,8 @@ func TestClientCodecWith(t *testing.T) {
 	)
 
 	registry := cdcjson.NewRegistry(
-		cdcjson.WithCmd[any, test.Cmd1](),
-		cdcjson.WithResult[any, test.Result1](),
+		cdcjson.WithCmd[any, cdctest.Cmd1](),
+		cdcjson.WithResult[any, cdctest.Result1](),
 	)
 	codec := cdcjson.NewClientCodecWith(registry)
 
@@ -176,4 +176,25 @@ func TestClientCodecWith(t *testing.T) {
 	v, _, err := codec.Decode(reader)
 	assertfatal.EqualError(t, err, nil)
 	assertfatal.EqualDeep(t, v, wantV)
+}
+
+func TestClientCodec_MaxLenOption(t *testing.T) {
+	var (
+		maxLen = 5
+		reader = cmock.NewReader()
+	)
+	reader.RegisterReadByte(
+		func() (b byte, err error) { return 0, nil },
+	).RegisterReadByte(
+		func() (b byte, err error) { return byte(10), nil },
+	)
+
+	codec := cdcjson.NewClientCodec[any](
+		[]reflect.Type{reflect.TypeFor[cdctest.Cmd1]()},
+		[]reflect.Type{reflect.TypeFor[cdctest.Result2]()},
+		cdcjson.WithMaxLen(maxLen),
+	)
+
+	_, _, err := codec.Decode(reader)
+	assertfatal.EqualDeep(t, errors.Is(err, com.ErrTooLargeLength), true)
 }

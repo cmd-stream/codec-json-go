@@ -1,4 +1,4 @@
-# codec-json-go
+# codec-json
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cmd-stream/codec-json-go.svg)](https://pkg.go.dev/github.com/cmd-stream/codec-json-go)
 [![GoReportCard](https://goreportcard.com/badge/cmd-stream/codec-json-go)](https://goreportcard.com/report/github.com/cmd-stream/codec-json-go)
@@ -14,7 +14,7 @@ type-safe serialization across network boundaries.
 ```go
 import (
   "reflect"
-  cdc "github.com/cmd-stream/codec-json-go"
+  cdcjson "github.com/cmd-stream/codec-json-go"
 )
 
 var (
@@ -28,12 +28,20 @@ var (
     reflect.TypeFor[YourResult](),
     // ...
   }
-  serverCodec = cdc.NewServerCodec(cmdTypes, resultTypes)
-  clientCodec = cdc.NewClientCodec(cmdTypes, resultTypes)
+  serverCodec = cdcjson.NewServerCodec(cmdTypes, resultTypes)
+  clientCodec = cdcjson.NewClientCodec(cmdTypes, resultTypes)
 )
 ```
 
 ## Example
 
-A full example of how to use **codec-json** can be found 
-[here](https://github.com/cmd-stream/examples-go/tree/main/calc_json).
+See the [calc_json](https://github.com/cmd-stream/examples-go/tree/main/calc_json) 
+example for a full demonstration of `codec-json`.
+
+## Fuzz Testing
+
+To run fuzz tests:
+
+```bash
+./fuzz.sh 1m
+```
